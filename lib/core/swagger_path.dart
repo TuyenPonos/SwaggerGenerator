@@ -101,8 +101,8 @@ class SwaggerPath extends Equatable {
             final _id = e.group(0);
             if (_id != null) {
               final _paramName =
-                  i == 0 ? '{id${i + 1}}' : '{${_segments[i - 1]}Id}';
-              _path = _path.replaceFirst(_id, _paramName);
+                  i == 0 ? 'id${i + 1}' : '${_segments[i - 1]}Id';
+              _path = _path.replaceFirst(_id, '{$_paramName}');
               _queryParams.putIfAbsent(
                 _paramName,
                 () => {
