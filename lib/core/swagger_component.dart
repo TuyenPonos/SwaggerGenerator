@@ -23,7 +23,7 @@ class SwaggerComponent {
 
   Map<String, dynamic> toJson() {
     final properties = <String, dynamic>{};
-    for (var s in securities) {
+    for (final s in securities) {
       properties.putIfAbsent(s.name, () => s);
     }
     return {

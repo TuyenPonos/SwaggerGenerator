@@ -19,13 +19,19 @@ class SwaggerGenerator {
 
   late final SharedPreferences _preferences;
   bool _includeResponse = false;
+  final List<RegExp> _pathParamsRegs = List.from([
+    RegExp(r'[0-9]+(-)[0-9]+(-)[0-9]+(-)[0-9]+'),
+    RegExp(r'\d+'),
+  ]);
 
   Swagger? swagger;
 
   Future<void> initial(
     Swagger data, {
     bool includeResponse = false,
+    List<RegExp> pathParamsRegs = const [],
   }) async {
+    _pathParamsRegs.addAll(pathParamsRegs);
     _includeResponse = includeResponse;
     _preferences = await SharedPreferences.getInstance();
     final savedData =
@@ -57,6 +63,7 @@ class SwaggerGenerator {
       swagger!.components?.securities ?? [],
       response,
       includeResponse: _includeResponse,
+      pathRegs: _pathParamsRegs,
     );
     _gen(swgPath);
     _save();
@@ -72,6 +79,7 @@ class SwaggerGenerator {
       swagger!.components?.securities ?? [],
       error.response,
       includeResponse: _includeResponse,
+      pathRegs: _pathParamsRegs,
     );
     _gen(swgPath);
     _save();

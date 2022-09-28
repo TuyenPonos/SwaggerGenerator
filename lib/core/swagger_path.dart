@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -67,12 +69,13 @@ class SwaggerPath extends Equatable {
     List<SwaggerSecurity> securities,
     Response? response, {
     bool includeResponse = false,
+    List<RegExp> pathRegs = const [],
   }) {
     String _path = '';
-    final Map<String, dynamic> _queryParams = {};
+    final Map<String, dynamic> _queryParams = requestOptions.queryParameters;
     if (requestOptions.extra.containsKey('path')) {
       _path = requestOptions.extra['path'];
-      RegExp('\{(.*?)\}').allMatches(_path).forEach((e) {
+      RegExp(r'\{(.*?)\}').allMatches(_path).forEach((e) {
         final _param = _path.substring(e.start + 1, e.end - 1);
         _queryParams.putIfAbsent(
           _param,
@@ -83,20 +86,36 @@ class SwaggerPath extends Equatable {
         );
       });
     } else {
-      _path = requestOptions.path;
-    }
-    final _splitPaths = _path.split('?');
-    _path = _splitPaths.first;
-    final _requestBody = requestOptions.data;
-    if (requestOptions.queryParameters.isNotEmpty) {
-      _queryParams.addAll(requestOptions.queryParameters);
-    } else {
+      final _splitPaths = requestOptions.path.split('?');
+      _path = _splitPaths.first;
       final _pathQueryParam =
           _splitPaths.length == 2 ? requestOptions.path.split('?').last : null;
       if (_pathQueryParam != null) {
         _queryParams.addAll(Uri.splitQueryString(_pathQueryParam));
       }
+      final List<String> _segments = Uri.dataFromString(_path).pathSegments;
+      for (int i = 0; i < _segments.length; i++) {
+        final _segment = _segments[i];
+        for (final _reg in pathRegs) {
+          _reg.allMatches(_segment).forEach((e) {
+            final _id = e.group(0);
+            if (_id != null) {
+              final _paramName =
+                  i == 0 ? '{id${i + 1}}' : '{${_segments[i - 1]}Id}';
+              _path = _path.replaceFirst(_id, _paramName);
+              _queryParams.putIfAbsent(
+                _paramName,
+                () => {
+                  'in': 'path',
+                  'type': 'string',
+                },
+              );
+            }
+          });
+        }
+      }
     }
+    final _requestBody = requestOptions.data;
     final List<Map<String, dynamic>> _security = [];
     requestOptions.headers.forEach((key, _) {
       final _index = securities.indexWhere((s) => s.name == key);
@@ -156,11 +175,12 @@ class SwaggerPath extends Equatable {
 
   Map<String, dynamic> toJson() {
     final _responses = <String, SwaggerResponse>{};
-    responses.forEach((e) {
+    for (final e in responses) {
       _responses.putIfAbsent(e.statusCode, () => e);
-    });
+    }
+
     return {
-      '${method.toLowerCase()}': {
+      method.toLowerCase(): {
         'tags': [
           tag,
         ],
@@ -278,11 +298,13 @@ class SwaggerContent {
   Map<String, dynamic> toJson() {
     if (data is FormData) {
       final _properties = <String, dynamic>{};
-      (data as FormData).fields.forEach((e) {
+      for (final e in (data as FormData).fields) {
         _properties.putIfAbsent(
-            e.key, () => SwaggerUtils().toPrimativeType(e.value));
-      });
-      (data as FormData).files.forEach((e) {
+          e.key,
+          () => SwaggerUtils().toPrimativeType(e.value),
+        );
+      }
+      for (final e in (data as FormData).files) {
         _properties.putIfAbsent(
           e.key,
           () => {
@@ -290,7 +312,7 @@ class SwaggerContent {
             'format': 'binary',
           },
         );
-      });
+      }
       return {
         'multipart/form-data': {
           'schema': {
@@ -421,7 +443,7 @@ class SwaggerResponse extends Equatable {
 
   Map<String, dynamic> toJson() {
     return {
-      'description': statusMessage ?? '$statusCode',
+      'description': statusMessage ?? statusCode,
       'content': response,
     };
   }
