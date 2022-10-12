@@ -79,3 +79,8 @@ SwaggerGenerator.instance.openPreviewPage(context);
 Input your gitlab information then you can sync latest structure to gitlab
 
 ![FORM](sync_form.png)
+
+
+## Example
+
+Follow the example: `/example`
