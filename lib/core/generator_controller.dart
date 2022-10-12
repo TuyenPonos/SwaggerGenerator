@@ -26,6 +26,11 @@ class SwaggerGenerator {
 
   Swagger? swagger;
 
+  /// Initial base swagger document information
+  /// [pathParamsRegs] using to get query params from a path. Example: https://example.api/v1/user/1255421
+  /// then the lib with create path such as: https://example.api/v1/user/{userId}
+  /// By default have 2 regex:  RegExp(r'[0-9]+(-)[0-9]+(-)[0-9]+(-)[0-9]+') and RegExp(r'\d+')
+
   Future<void> initial(
     Swagger data, {
     bool includeResponse = false,
@@ -47,11 +52,15 @@ class SwaggerGenerator {
   String? get _localData => _preferences.getString(_swaggerLocalKey);
   String? get _localGitlabInfo => _preferences.getString(_gitLabInfo);
 
+  /// Update the version of document after initial
+
   void updateVersion(String value) {
     assert(swagger != null, 'SwaggerGeneratorController has not initial');
     swagger = swagger!.copyWith(info: swagger!.info.copyWith(version: value));
     _controller.add(swagger!);
   }
+
+  /// Record response then create structure (if not existing) or update structure (if existing)
 
   void updateResponse(Response response) {
     assert(swagger != null, 'SwaggerGeneratorController has not initial');
@@ -68,6 +77,8 @@ class SwaggerGenerator {
     _gen(swgPath);
     _save();
   }
+
+  /// Record error then create structure (if not existing) or update structure (if existing)
 
   void updateError(DioError error) {
     assert(swagger != null, 'SwaggerGeneratorController has not initial');
@@ -114,6 +125,7 @@ class SwaggerGenerator {
     _controller.add(swagger!);
   }
 
+  /// Save latest to local storage
   Future<void> _save() async {
     if (swagger == null) {
       return;
@@ -133,10 +145,12 @@ class SwaggerGenerator {
     return false;
   }
 
+  /// Close the controller avoid leaking memory
   void dispose() {
     _controller.close();
   }
 
+  /// Open a Material page that show preview of swagger.json file and can sync with gitlab
   Future<dynamic> openPreviewPage(BuildContext context) {
     return Navigator.of(context).push(MaterialPageRoute(
       builder: (context) {
@@ -152,6 +166,13 @@ class SwaggerGenerator {
     'branch': null,
   };
   Map<String, dynamic> get gitInformation => _gitInformation;
+
+  /// The function using gitlab API to sync `swagger.json` file to your repo
+  /// [domain] your gitlab domain, such as: https:www.git.corporaton.com
+  /// [projectId] find it in gitlab repo description
+  /// [accessToken] your access token to access into the repo
+  /// [branch] branch you wanna put
+  /// [message] is optional. If message is empty, default time Iso8601 will be used
 
   Future<bool> syncToGitlab({
     required String domain,

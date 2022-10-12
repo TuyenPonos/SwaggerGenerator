@@ -13,3 +13,7 @@
 ## 0.0.4
 
 * Add example
+
+## 0.0.5
+
+* Update the document
