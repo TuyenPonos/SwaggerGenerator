@@ -2,7 +2,8 @@ The `swagger_generator` is a library using dio interceptor to generate swagger s
 
 ## Features
 
-- Generate swagger json structure automatically
+- Generate `swagger.json` file structure automatically
+- Preview the `swagger.json` file
 - Sync data to gitlab
 
 ## Getting started
@@ -10,7 +11,7 @@ The `swagger_generator` is a library using dio interceptor to generate swagger s
 - The model of the library is based on [Swagger Basic Structure](https://swagger.io/docs/specification/basic-structure/)
 - Note: The library will ignore requests with base urls are outside `servers`
 - By default, the response structure isn't generated. If you wanna generate response structure, set `includeResponse` as `true`
-- Using gitlab API to sync to repository. You need to get the gitlab token
+- Using gitlab API to sync to repository by your gitlab token
 
 
 ## Usage
@@ -33,17 +34,17 @@ Dio()
 [REQUIRED]
 
 ```dart
-SwaggerGenerator.instance.initial(
+ SwaggerGenerator.instance.initial(
     Swagger(
-      id: 'test',
+      id: '1',
       info: const SwaggerInfo(
-        title: 'API docs',
+        title: 'Example API docs',
         version: '1.0.0',
       ),
-      servers: [
+      servers: const [
         SwaggerServer(
-          url: 'https://test.com/api',
-          description: 'Test API',
+          url: 'https://example.swagger-test/api/v1',
+          description: 'Test',
         ),
       ],
       components: SwaggerComponent(
@@ -54,10 +55,14 @@ SwaggerGenerator.instance.initial(
             scheme: 'bearer',
             bearerFormat: 'JWT',
           ),
+          SwaggerSecurity(
+            name: 'Device-Type',
+            type: 'apiKey',
+          ),
         ],
       ),
-    ),  
-    includeResponse: true
+    ),
+    includeResponse: true,
   );
 ```
 

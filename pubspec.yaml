@@ -1,5 +1,5 @@
 name: swagger_generator
-description: Create swagger API document with less effort
+description: Create a swagger API document with less effort. swagger_generator is built as Dio interceptor, that record request/response then create swagger.json
 version: 0.0.3
 homepage: https://github.com/TuyenPonos/SwaggerGenerator
 
