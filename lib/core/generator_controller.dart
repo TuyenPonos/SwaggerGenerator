@@ -43,7 +43,7 @@ class SwaggerGenerator {
         _localData != null ? Swagger.fromJson(jsonDecode(_localData!)) : null;
     swagger = savedData != null ? data.merge(savedData) : data;
     _save();
-    _controller.add(data);
+    _controller.add(swagger!);
     if (_localGitlabInfo != null) {
       _gitInformation = jsonDecode(_localGitlabInfo!);
     }

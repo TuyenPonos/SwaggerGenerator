@@ -17,3 +17,8 @@
 ## 0.0.5
 
 * Update the document
+
+## 1.0.0
+
+* Fix bugs
+* Update document

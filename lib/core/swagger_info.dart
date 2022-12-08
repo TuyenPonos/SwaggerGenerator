@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 
 class SwaggerInfo extends Equatable {
+  /// It is considered to be a good practice to include general information about your API into the specification: version number, license notes, contact data, links to documentation, and more
+  /// https://swagger.io/docs/specification/api-general-info/
   const SwaggerInfo({
     required this.title,
     this.contact,
@@ -24,15 +26,14 @@ class SwaggerInfo extends Equatable {
 
   factory SwaggerInfo.fromJson(Map<String, dynamic> json) => SwaggerInfo(
         title: json['title'],
-        contact: json['contact'] != null
-            ? Contact.fromJson(json['contact'])
-            : Contact(),
+        contact:
+            json['contact'] != null ? Contact.fromJson(json['contact']) : null,
         version: json['version'],
       );
 
   Map<String, dynamic> toJson() => {
         'title': title,
-        'contact': contact?.toJson() ?? Contact().toJson(),
+        'contact': contact?.toJson() ?? {},
         'version': version,
       };
 
@@ -45,7 +46,7 @@ class SwaggerInfo extends Equatable {
 
 class Contact {
   Contact({
-    this.email = 'truongnv@ponos-tech.com',
+    this.email = 'contact@info.com',
   });
 
   final String email;
@@ -58,7 +59,7 @@ class Contact {
       );
 
   factory Contact.fromJson(Map<String, dynamic> json) => Contact(
-        email: json['email'],
+        email: json['email'] ?? '',
       );
 
   Map<String, dynamic> toJson() => {

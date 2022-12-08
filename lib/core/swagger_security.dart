@@ -1,13 +1,25 @@
 import 'package:equatable/equatable.dart';
 
 class SwaggerSecurity extends Equatable {
+  /// Display Security name
   final String name;
+
+  /// Where will add the value: query, header, cookie
   final String position;
+
+  /// http, apiKey, oauth2, openIdConnect
   final String type;
+
+  /// bearer, basic
   final String? scheme;
+
+  /// Optional, arbitrary value for documentation purposes
   final String? bearerFormat;
+
+  /// Optional, description about this security
   final String? description;
 
+  /// Using to make Authentication in Swagger https://swagger.io/docs/specification/authentication/
   const SwaggerSecurity({
     required this.name,
     this.position = 'header',

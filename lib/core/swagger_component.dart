@@ -3,6 +3,9 @@ import 'swagger_security.dart';
 class SwaggerComponent {
   final List<SwaggerSecurity> securities;
 
+  /// SwaggerComponent now support securitySchemes only, using to make Authentication
+  /// Reference: https://swagger.io/docs/specification/components/?sbsearch=Component
+
   SwaggerComponent({
     this.securities = const [],
   });

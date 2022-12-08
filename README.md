@@ -2,19 +2,18 @@ The `swagger_generator` is a library using dio interceptor to generate swagger s
 
 ## Features
 
-- Generate `swagger.json` file structure automatically
+- The model of the library is based on [Swagger Basic Structure](https://swagger.io/docs/specification/basic-structure/)
+- Auto create swagger path, tags, request body, request response,... into `swagger.json` file
 - Preview the `swagger.json` file
-- Sync data to gitlab
+- Auto save to local and merge if request/response have any updated in same path
+- Sync data to gitlab to view as Swagger Hub
+- The library will ignore requests with base urls are outside `servers`
+
+
+![DEMO](https://github.com/TuyenPonos/SwaggerGenerator/blob/main/example/demo.gif)
+
 
 ## Getting started
-
-- The model of the library is based on [Swagger Basic Structure](https://swagger.io/docs/specification/basic-structure/)
-- Note: The library will ignore requests with base urls are outside `servers`
-- By default, the response structure isn't generated. If you wanna generate response structure, set `includeResponse` as `true`
-- Using gitlab API to sync to repository by your gitlab token
-
-
-## Usage
 
 ### Config interceptor
 
@@ -29,9 +28,9 @@ Dio()
 ]);
 ```
 
-### Initial plugin
+### 1. Initial plugin
 
-[REQUIRED]
+**[REQUIRED]**
 
 ```dart
  SwaggerGenerator.instance.initial(
@@ -66,21 +65,66 @@ Dio()
   );
 ```
 
-### Preview data
+### 2. Add details for a path by using extra options
 
-The library support preview json data. You can navigate to this screen by using
+* Define params in path
+
+By default, the library will spit query params from path. Example execute path `posts/1/comments`, then swagger path will be created as `"/posts/{postId}/comments"`. If you want make your personal, you can add it to options of dio request
+
+```dart
+final resp = await _dio.get(
+      '/posts/1/comments',
+      options: Options(
+        extra: {
+          'path': 'posts/{myPostId}/comments',
+        },
+      ),
+    );
+
+```
+
+Other way, you can define the `RegExp` rule to extract query params by passing `pathParamsRegs` when call `initial`.
+
+* Define summary or description
+
+Define summary or description by using extra also
+
+```dart
+final resp = await _dio.get(
+      '/posts/1/comments',
+      options: Options(
+        extra: {
+          'summary': 'Summary of this API',
+          'description': 'This API execute an action',
+        },
+      ),
+    );
+
+```
+
+### 3. Preview data
+
+The library support preview json data. In there, you can copy json content or sync to gitlab. Navigate to it by using
 
 ```dart
 SwaggerGenerator.instance.openPreviewPage(context);
 ```
 
-### Sync to gitlab
+### 4. Sync to gitlab
 
 Input your gitlab information then you can sync latest structure to gitlab
 
-![FORM](sync_form.png)
+![FORM]((https://github.com/TuyenPonos/SwaggerGenerator/blob/main/example/sync_form.png))
 
 
 ## Example
 
-Follow the example: `/example`
+Follow the example: [/example](https://github.com/TuyenPonos/SwaggerGenerator/blob/main/example)
+
+
+## Contributions 
+
+Feel free to contribute to this project.
+
+If you find a bug or want a feature, but don't know how to fix/implement it, please fill an issue.
+If you fixed a bug or implemented a feature, please send a pull request.

@@ -10,6 +10,7 @@ class SwaggerPath extends Equatable {
   final String tag;
   final String method;
   final String? summary;
+  final String? description;
   final List<SwaggerResponse> responses;
   final SwaggerContent? requestBody;
   final SwaggerQuery? queryParams;
@@ -26,6 +27,7 @@ class SwaggerPath extends Equatable {
     this.headers = const [],
     this.includeResponse = false,
     this.summary,
+    this.description,
   });
 
   factory SwaggerPath.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,7 @@ class SwaggerPath extends Equatable {
       tag: json['tag'],
       method: json['method'],
       summary: json['summary'],
+      description: json['description'],
       headers: json['headers'] != null
           ? (json['headers'] as List)
               .map((e) => e as Map<String, dynamic>)
@@ -61,6 +64,7 @@ class SwaggerPath extends Equatable {
       'requestBody': requestBody?.toSaveObject(),
       'responses': responses.map((e) => e.toSaveObject()).toList(),
       'summary': summary,
+      'description': description,
     };
   }
 
@@ -128,6 +132,7 @@ class SwaggerPath extends Equatable {
       tag: Uri.dataFromString(_path).pathSegments[1],
       method: requestOptions.method,
       summary: requestOptions.extra['summary'],
+      description: requestOptions.extra['description'],
       responses: [
         SwaggerResponse(
           statusCode: (response?.statusCode ?? 0).toString(),
@@ -148,6 +153,7 @@ class SwaggerPath extends Equatable {
       summary: other.summary,
       queryParams: other.queryParams,
       requestBody: other.requestBody,
+      description: other.description,
     );
   }
 
@@ -160,6 +166,7 @@ class SwaggerPath extends Equatable {
     SwaggerContent? requestBody,
     SwaggerQuery? queryParams,
     List<Map<String, dynamic>>? headers,
+    String? description,
   }) {
     return SwaggerPath(
       path: path ?? this.path,
@@ -170,6 +177,7 @@ class SwaggerPath extends Equatable {
       requestBody: requestBody ?? this.requestBody,
       queryParams: queryParams ?? this.queryParams,
       headers: headers ?? this.headers,
+      description: description ?? this.description,
     );
   }
 
@@ -185,6 +193,7 @@ class SwaggerPath extends Equatable {
           tag,
         ],
         if (summary != null) 'summary': summary,
+        if (description != null) 'description': description,
         'responses': includeResponse
             ? _responses
             : {
@@ -429,7 +438,9 @@ class SwaggerResponse extends Equatable {
     return SwaggerResponse(
       statusCode: json['statusCode'],
       statusMessage: json['statusMessage'],
-      response: SwaggerContent.fromJson(json['response']),
+      response: json['response'] != null
+          ? SwaggerContent.fromJson(json['response'])
+          : null,
     );
   }
 

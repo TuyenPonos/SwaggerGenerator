@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class SwaggerServer extends Equatable {
+  /// In OpenAPI 3.0, you use the servers array to specify one or more base URLs for your API
   const SwaggerServer({
     required this.url,
     required this.description,
