@@ -10,7 +10,7 @@ The `swagger_generator` is a library using dio interceptor to generate swagger s
 - The library will ignore requests with base urls are outside `servers`
 
 
-![DEMO](https://github.com/TuyenPonos/SwaggerGenerator/blob/main/example/demo.gif)
+![DEMO](https://github.com/TuyenPonos/SwaggerGenerator/blob/master/example/demo.gif)
 
 
 ## Getting started
@@ -114,12 +114,12 @@ SwaggerGenerator.instance.openPreviewPage(context);
 
 Input your gitlab information then you can sync latest structure to gitlab
 
-![FORM]((https://github.com/TuyenPonos/SwaggerGenerator/blob/main/example/sync_form.png))
+![FORM](https://github.com/TuyenPonos/SwaggerGenerator/blob/master/example/sync_form.png)
 
 
 ## Example
 
-Follow the example: [/example](https://github.com/TuyenPonos/SwaggerGenerator/blob/main/example)
+Follow the example: [/example](https://github.com/TuyenPonos/SwaggerGenerator/blob/master/example)
 
 
 ## Contributions 

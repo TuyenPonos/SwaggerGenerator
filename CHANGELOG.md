@@ -22,3 +22,7 @@
 
 * Fix bugs
 * Update document
+
+## 1.0.0+1
+
+* Update document
